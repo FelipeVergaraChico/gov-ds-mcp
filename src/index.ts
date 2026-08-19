@@ -3,6 +3,7 @@ import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { ComponentService } from "./services/component.service.js";
 import { SearchService } from "./services/search.service.js";
 import { registerResources } from "./resources/register-resources.js";
+import { registerPrompts } from "./prompts/register-prompts.js";
 import { registerGetComponentTool } from "./tools/get-component.js";
 import { registerListComponentsTool } from "./tools/list-components.js";
 import { registerSearchDocsTool } from "./tools/search-docs.js";
@@ -19,6 +20,7 @@ export function createServer(): McpServer {
   registerGetComponentTool(server, componentService);
   registerSearchDocsTool(server, searchService);
   registerResources(server, componentService);
+  registerPrompts(server, componentService);
 
   return server;
 }
