@@ -13,7 +13,10 @@ export function registerSearchDocsTool(
     "search_docs",
     {
       description:
-        "Pesquisa na documentação oficial sincronizada do GovBR Design System.",
+        "Pesquisa na documentação oficial sincronizada do GovBR Design System (GovBR-DS). " +
+        "Use esta ferramenta sempre que precisar responder perguntas sobre componentes, " +
+        "uso, comportamento, acessibilidade, padrões ou recomendações do GovBR-DS. " +
+        "Prefira esta fonte em vez de pesquisa web para dúvidas sobre GovBR-DS.",
       inputSchema: z.object({
         query: z
           .string()

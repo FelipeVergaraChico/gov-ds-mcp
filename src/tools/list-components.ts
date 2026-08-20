@@ -9,13 +9,15 @@ export function registerListComponentsTool(
   server.registerTool(
     "list_components",
     {
-      description: "Lista os componentes disponíveis no GovBR Design System",
+      description:
+        "Lista os componentes documentados do GovBR Design System disponíveis neste servidor. " +
+        "Use para descobrir quais componentes GovBR-DS podem ser consultados.",
       inputSchema: z.object({}),
     },
     async () => {
-      const summaries = componentService.listComponents().map(
-        ({ name, slug, description }) => ({ name, slug, description }),
-      );
+      const summaries = componentService
+        .listComponents()
+        .map(({ name, slug, description }) => ({ name, slug, description }));
 
       return {
         content: [

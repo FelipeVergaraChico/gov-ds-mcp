@@ -10,7 +10,8 @@ export function registerGetComponentTool(
     "get_component",
     {
       description:
-        "Obtém informações detalhadas sobre um componente do GovBR Design System.",
+        "Obtém a documentação oficial sincronizada completa de um componente do GovBR Design System. " +
+        "Use quando já souber qual componente GovBR-DS precisa consultar.",
       inputSchema: z.object({
         name: z.string().min(1, "O nome do componente é obrigatório."),
       }),
