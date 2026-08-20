@@ -6,6 +6,12 @@ O `govbr-ds-mcp` fornece a agentes de IA acesso estruturado à documentação do
 
 O objetivo é permitir que ferramentas como Codex, Claude Code, Kiro e outros clientes compatíveis com MCP compreendam e utilizem o GovBR Design System com base em sua documentação oficial sincronizada, em vez de depender apenas do conhecimento prévio do modelo.
 
+O pacote está publicado no npm como [`govbr-ds-mcp`](https://www.npmjs.com/package/govbr-ds-mcp) e pode ser executado diretamente com:
+
+```bash
+npx -y govbr-ds-mcp
+```
+
 > Este é um projeto comunitário e independente. Não é um projeto oficial do Governo Federal Brasileiro nem da equipe responsável pelo GovBR-DS.
 
 ---
@@ -71,7 +77,7 @@ components.generated.ts
 
 Os dados gerados são armazenados localmente, permitindo que o servidor MCP funcione sem acesso à internet depois da sincronização.
 
-Atualmente, o projeto sincroniza **36 componentes documentados** do GovBR-DS.
+Atualmente, o projeto sincroniza **37 componentes documentados** do GovBR-DS.
 
 ---
 
@@ -356,29 +362,102 @@ O fluxo principal da aplicação é:
 
 ---
 
-## Requisitos
+## Uso rápido
 
 * Node.js 22+
 * npm
 
+Não é necessário clonar ou instalar o pacote globalmente. Clientes MCP podem iniciar o servidor publicado diretamente via `npx`:
+
+```bash
+npx -y govbr-ds-mcp
+```
+
+O servidor utiliza o transporte MCP `stdio` e funciona com os dados GovBR-DS incluídos no pacote, sem chamadas HTTP durante as consultas.
+
+## Configuração nos clientes MCP
+
+### Claude Desktop
+
+Adicione o servidor ao arquivo de configuração do Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "govbr-ds": {
+      "command": "npx",
+      "args": ["-y", "govbr-ds-mcp"]
+    }
+  }
+}
+```
+
+Depois de salvar o arquivo, reinicie o Claude Desktop.
+
+Consulte também a [documentação MCP do Claude](https://code.claude.com/docs/en/mcp).
+
+### Claude Code
+
+Registre o servidor pelo terminal:
+
+```bash
+claude mcp add govbr-ds -- npx -y govbr-ds-mcp
+```
+
+Use `claude mcp list` para confirmar o registro.
+
+### Codex
+
+Adicione ao arquivo `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.govbr-ds]
+command = "npx"
+args = ["-y", "govbr-ds-mcp"]
+```
+
+Também é possível registrar pelo terminal:
+
+```bash
+codex mcp add govbr-ds -- npx -y govbr-ds-mcp
+```
+
+Reinicie o Codex depois de alterar manualmente a configuração.
+
+Consulte também a [documentação MCP do Codex](https://developers.openai.com/codex/mcp/).
+
+### Kiro
+
+No Kiro, abra ou crie `.kiro/settings/mcp.json` no workspace. Para disponibilizar o servidor globalmente, use `~/.kiro/settings/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "govbr-ds": {
+      "command": "npx",
+      "args": ["-y", "govbr-ds-mcp"],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+Após salvar, abra o painel MCP do Kiro e confirme que `govbr-ds` está conectado.
+
+Consulte também a [documentação MCP do Kiro](https://kiro.dev/docs/mcp/configuration/).
+
 ---
 
-## Instalação
+## Desenvolvimento local
 
-Clone o repositório:
+Clone o repositório e instale as dependências:
 
 ```bash
 git clone https://github.com/FelipeVergaraChico/govbr-ds-mcp.git
 cd govbr-ds-mcp
-```
-
-Instale as dependências:
-
-```bash
 npm install
 ```
-
----
 
 ## Executando o servidor MCP
 
@@ -413,7 +492,7 @@ O projeto pode ser testado utilizando o MCP Inspector.
 Execute:
 
 ```bash
-npm run inspect
+npx @modelcontextprotocol/inspector npx -y govbr-ds-mcp
 ```
 
 No Inspector é possível testar as funcionalidades disponíveis.
@@ -449,7 +528,7 @@ check_govbr_accessibility
 Para atualizar o índice local:
 
 ```bash
-npm run sync:components
+npx tsx scripts/sync-components.ts
 ```
 
 O processo de sincronização:
@@ -527,13 +606,13 @@ npm test
 Atualize a documentação local:
 
 ```bash
-npm run sync:components
+npx tsx scripts/sync-components.ts
 ```
 
 Abra o MCP Inspector:
 
 ```bash
-npm run inspect
+npx @modelcontextprotocol/inspector npx tsx src/index.ts
 ```
 
 ---
@@ -605,7 +684,7 @@ O modelo é responsabilidade do cliente MCP conectado.
 Requisições externas são utilizadas durante a sincronização da documentação, e não durante consultas normais ao MCP.
 
 ```text
-npm run sync:components
+npx tsx scripts/sync-components.ts
         │
         └── Internet necessária
 
@@ -674,7 +753,7 @@ Quando o documento completo for necessário, o agente pode utilizar `get_compone
 * [ ] exemplos de implementação por componente
 * [ ] validação de código GovBR-DS
 * [ ] helpers para validação de acessibilidade
-* [ ] publicação no npm
+* [x] publicação no npm
 * [ ] publicação no MCP Registry
 * [ ] transporte HTTP
 
